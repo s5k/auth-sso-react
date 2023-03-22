@@ -1,3 +1,4 @@
+import FacebookLogin from "@greatsumini/react-facebook-login";
 import { GoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
 
@@ -31,6 +32,29 @@ function Login({ setPage }) {
       setPage("dashboard");
     });
   };
+
+  const loginWithFacebook = (response) => {
+    const data = {
+      accessToken: response.accessToken,
+    };
+    console.log(data, import.meta.env.VITE_BACKED_URI);
+    fetch(import.meta.env.VITE_BACKED_URI + "/auth/facebook-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      if (res.status !== 201) {
+        alert("Login Failed");
+        return;
+      }
+
+      alert("Login Success");
+      setPage("dashboard");
+    });
+  };
+
   const loginWithGoogle = (credentialResponse) => {
     console.log(credentialResponse);
     const data = {
@@ -47,9 +71,7 @@ function Login({ setPage }) {
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.status !== 201) {
-        alert(
-          "Login Failed, Please check your email and password. Or you should verify your email"
-        );
+        alert("Login Failed");
         return;
       }
 
@@ -70,10 +92,10 @@ function Login({ setPage }) {
             Don't have an account? Sign up!
           </a>
           <div className="bts">
-            <a href="#" className="fblogin social">
-              <i className="fa fa-facebook" />
-              <span>Sign in with Facebook</span>
-            </a>
+            <FacebookLogin
+              appId={import.meta.env.VITE_FACEBOOK_APPID}
+              onSuccess={loginWithFacebook}
+            />
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@greatsumini/react-facebook-login": "^3.3.2",
     "@react-oauth/google": "^0.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
